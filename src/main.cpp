@@ -30,6 +30,8 @@ int scoresArray[9];
 
 
 String httpGETRequest(const char* serverUrl) {
+  indicator.blue();
+
   WiFiClient client;
   HTTPClient http;
     
@@ -75,6 +77,7 @@ void setup() {
   WiFi.begin(ssid, password);
   Serial.println("Connecting");
   while(WiFi.status() != WL_CONNECTED) {
+    indicator.red();
     delay(500);
     Serial.print(".");
   }
@@ -87,6 +90,13 @@ void setup() {
 
 
 void loop() {
+  // Set Indicator colors
+  if(WiFi.status()==WL_CONNECTED){
+    indicator.green();
+  }else{
+    indicator.red();
+  }
+
   // Send an HTTP POST request depending on timerDelay
   if ((millis() - lastTime) > timerDelay) {
     //Check WiFi connection status
