@@ -61,11 +61,9 @@ String httpGETRequest(const char* serverUrl) {
 
 void convertToArray(int num){
   int temp = num;
-  Serial.println("Inside Function");
   for(int i = 8; i>=0; i--){
     scoresArray[i] = temp%10;
     temp /= 10;
-    // Serial.println(temp);
   }
 }
 
@@ -85,7 +83,7 @@ void setup() {
   Serial.print("Connected to WiFi network with IP Address: ");
   Serial.println(WiFi.localIP());
  
-  Serial.println("Timer set to 5 seconds (timerDelay variable), it will take 5 seconds before publishing the first reading.");
+  Serial.println("Timer set to 30 seconds (timerDelay variable), it will take 30 seconds before publishing the first reading.");
 }
 
 
@@ -112,8 +110,8 @@ void loop() {
         return;
       }
     
-      Serial.print("JSON object = ");
-      Serial.println(scoresObj);
+      // Serial.print("JSON object = ");
+      // Serial.println(scoresObj);
     
       // scoresObj.keys() can be used to get an array of all the keys in the object
       JSONVar keys = scoresObj.keys();
@@ -128,6 +126,7 @@ void loop() {
           Serial.print(scoresArray[i]);
           Serial.print(",");
         }
+        Serial.println("");
     }
     else {
       Serial.println("WiFi Disconnected");
