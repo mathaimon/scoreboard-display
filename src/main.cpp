@@ -5,28 +5,34 @@
 #include <Arduino_JSON.h>
 
 #include <IndicatorLights.h>
+#include <DisplayBoard.h>
 
 // Indicator LED's
 int redLed = 2;
 int greenLed = 0;
 int blueLed = 4;
 
+// Display Board
+int latchPin = 12; // ST_CP
+int clockPin = 14; // SH_CP
+int dataPin = 13; // DS
+
 IndicatorLights indicator(redLed, greenLed, blueLed);
+DisplayBoard displayBoard(latchPin, clockPin, dataPin);
 
 const char* ssid = "Wireless AP";
-const char* password = "12345678";
+const char* password = "123456789000";
 
 //Your Domain name with URL path or IP address with path
-const char* serverUrl = "http://192.168.1.223:8000/combined";
+const char* serverUrl = "http://192.168.245.87:8000/combined";
 
 // the following variables are unsigned longs because the time, measured in
 // milliseconds, will quickly become a bigger number than can be stored in an int.
 unsigned long lastTime = 0;
 // 30 Seconds Delay
-unsigned long timerDelay = 30000;
+unsigned long timerDelay = 10000;
 
 String scores;
-int scoresArray[9];
 
 
 String httpGETRequest(const char* serverUrl) {
@@ -57,16 +63,6 @@ String httpGETRequest(const char* serverUrl) {
 
   return payload;
 }
-
-
-void convertToArray(int num){
-  int temp = num;
-  for(int i = 8; i>=0; i--){
-    scoresArray[i] = temp%10;
-    temp /= 10;
-  }
-}
-
 
 void setup() {
   Serial.begin(115200);
@@ -115,18 +111,16 @@ void loop() {
     
       // scoresObj.keys() can be used to get an array of all the keys in the object
       JSONVar keys = scoresObj.keys();
-    
-        JSONVar value = scoresObj[keys[0]];
-        Serial.println(value);
-        convertToArray(int(value));
 
-        // Print Values in array
-        Serial.print("Scores Array : ");
-        for(int i=0; i<=8;i++){
-          Serial.print(scoresArray[i]);
-          Serial.print(",");
-        }
-        Serial.println("");
+      // Debug code
+      // Serial.print("Key Length : ");
+      // Serial.println(sizeof(keys));
+      // Serial.print("Key : ");
+      // Serial.println(keys);
+
+      JSONVar value = scoresObj[keys[0]];
+      Serial.println(value);
+      displayBoard.show(int(value));
     }
     else {
       Serial.println("WiFi Disconnected");
