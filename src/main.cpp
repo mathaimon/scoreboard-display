@@ -24,7 +24,7 @@ const char* ssid = "Wireless AP";
 const char* password = "123456789000";
 
 //Your Domain name with URL path or IP address with path
-const char* serverUrl = "http://192.168.245.87:8000/combined";
+const char* serverUrl = "https://scoreboard-api-flask.vercel.app/combined";
 
 // the following variables are unsigned longs because the time, measured in
 // milliseconds, will quickly become a bigger number than can be stored in an int.
