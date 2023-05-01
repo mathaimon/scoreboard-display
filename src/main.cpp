@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
+#include <WiFiClientSecureBearSSL.h>
 #include <WiFiClient.h>
 #include <Arduino_JSON.h>
 
@@ -38,28 +39,30 @@ String scores;
 String httpGETRequest(const char* serverUrl) {
   indicator.blue();
 
-  WiFiClient client;
-  HTTPClient http;
+  // WiFiClient client;
+  std::unique_ptr<BearSSL::WiFiClientSecure>client(new BearSSL::WiFiClientSecure);
+  client->setInsecure();
+  HTTPClient https;
     
   // Your IP address with path or Domain name with URL path 
-  http.begin(client, serverUrl);
+  https.begin(*client, serverUrl);
   
   // Send HTTP POST request
-  int httpResponseCode = http.GET();
+  int httpResponseCode = https.GET();
   
   String payload = "{}"; 
   
   if (httpResponseCode>0) {
     Serial.print("HTTP Response code: ");
     Serial.println(httpResponseCode);
-    payload = http.getString();
+    payload = https.getString();
   }
   else {
     Serial.print("Error code: ");
     Serial.println(httpResponseCode);
   }
   // Free the resources
-  http.end();
+  https.end();
 
   return payload;
 }
