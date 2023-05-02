@@ -70,6 +70,12 @@ String httpGETRequest(const char* serverUrl) {
 void setup() {
   Serial.begin(115200);
 
+  // Show Loading animation on display
+  for(int k=0; k<3; k++){
+    displayBoard.animate_loop();
+  }
+  displayBoard.animate_off();
+  displayBoard.animate_line();
 
   WiFi.begin(ssid, password);
   Serial.println("Connecting");

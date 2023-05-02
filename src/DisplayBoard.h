@@ -10,6 +10,7 @@ class DisplayBoard{
 
         // Decimal representation of the binary outputs of the shift register.
         int dec_digits[10] = {126, 48, 109, 121, 51, 91, 95, 112, 127, 123};
+        int dec_seg[6] = {4, 8, 16, 32, 64, 2};
         // Array to the recieved score values excluding the leading '1'
         int scoresArray[9];
 
@@ -48,5 +49,40 @@ class DisplayBoard{
                 Serial.print(scoresArray[j]);
                 Serial.print(",");
             }
+        }
+
+        // Display Animations
+        void animate_loop(){
+            for(int i=5; i>=0; i--){
+                digitalWrite(_LATCH_PIN, LOW);
+                for(int j=0; j<9; j++){
+                shiftOut(_DATA_PIN, _CLOCK_PIN, LSBFIRST, dec_seg[i]);
+                }
+                digitalWrite(_LATCH_PIN, HIGH);
+                delay(110);
+            }
+        }
+        
+        void animate_line(){
+            for(int i=0; i<9; i++){
+                digitalWrite(_LATCH_PIN, LOW);
+                shiftOut(_DATA_PIN, _CLOCK_PIN, LSBFIRST, 1);
+                digitalWrite(_LATCH_PIN, HIGH);
+                delay(100);
+            }
+            for(int i=0; i<9; i++){
+                digitalWrite(_LATCH_PIN, LOW);
+                shiftOut(_DATA_PIN, _CLOCK_PIN, LSBFIRST, 0);
+                digitalWrite(_LATCH_PIN, HIGH);
+                delay(100);
+            }
+        }
+
+        void animate_off(){
+            digitalWrite(_LATCH_PIN, LOW);
+            for(int i=0; i<9; i++){
+                shiftOut(_DATA_PIN, _CLOCK_PIN, LSBFIRST, 0);
+            }
+            digitalWrite(_LATCH_PIN, HIGH);
         }
 };
